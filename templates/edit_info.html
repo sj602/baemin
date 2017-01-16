@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% block body %}
 {% block title %}baemin{% endblock %}
+{% block body %}
 {% include 'navbar.html' %}
 <div class="container">
 	정보를 수정해주세요.
@@ -9,7 +9,7 @@
 			<form method="post" action="">
 				{% csrf_token %}
 				{{ form.as_p }}
-				<button class="btn">저장하기</button>
+				<button class="btn btn-default">저장하기</button>
 			</form>
 		</div>
 	</div>
