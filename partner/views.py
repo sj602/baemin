@@ -75,11 +75,11 @@ def edit(request):
 
 	return render(request, "edit.html", ctx)
 
-def menu(request):
+def menu_list(request):
 	ctx = {}
 	menu_list = Menu.objects.filter(partner = request.user.partner)
 	ctx.update({"menu_list": menu_list})
-	return render(request, "menu.html", ctx)
+	return render(request, "menu_list.html", ctx)
 
 def menu_add(request):
 	ctx = {}
@@ -98,3 +98,31 @@ def menu_add(request):
 			ctx.update({ "form": form })
 
 	return render(request, "menu_add.html", ctx)
+
+def menu_detail(request, menu_id):
+	ctx = {"menu" : menu}
+	menu = Menu.objects.get(id=menu_id)
+	return render(request, "menu_detail", ctx)
+
+def menu_edit(request, menu_id):
+	ctx = { "replacement" : "수정"}
+	menu = Menu.objects.get(id=menu_id)
+	if request.method == "GET":
+		form = MenuForm(instance=menu)
+		ctx.update({ "form": form })
+	elif request.method == "POST":
+		form = MenuForm(request.POST, request.FILES, instance=menu)
+		if form.is_valid():
+			menu = form.save(commit=False)
+			menu.partner = request.user.partner
+			menu.save()
+			return redirect("/partner/menu/")
+		else:
+			ctx.update({ "form" : form })
+
+	return render(request, "menu_add", ctx)
+
+def menu_delete(request, menu_id):
+	menu = Menu.objects.get(id=menu_id)
+	menu.delete()
+	return redirect("/partner/menu/")
